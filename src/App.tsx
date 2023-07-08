@@ -1,30 +1,22 @@
-import React, { useState } from 'react';
-import usersFromServer from './api/users.json';
+import React, { useEffect, useState } from 'react';
 import { UsersList } from './components/UserList';
 import { User } from './types';
-import { PostsPage } from './PostsPage';
+import { getUsers } from './services/user';
 
 export const App: React.FC = () => {
-  const [users, setUsers] = useState<User[]>(usersFromServer);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    getUsers().then(setUsers)
+  }, []);
 
   return (
     <div className="section py-5">
       <div className="box">
         <div className="title">Users</div>
 
-        {users.length > 0 && (
-          <UsersList
-            users={users}
-            selectedUser={selectedUser}
-            onSelect={setSelectedUser}
-          />
-        )}
+        <UsersList users={users} />
       </div>
-
-      {selectedUser && (
-        <PostsPage />
-      )}
     </div>
   );
 };

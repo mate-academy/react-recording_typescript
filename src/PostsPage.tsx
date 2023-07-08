@@ -1,14 +1,20 @@
 // #region imports 
-import React, { useCallback, useMemo, useState } from 'react';
-
+import React, { useCallback, useState } from 'react';
 import { Post } from './types/Post';
-import { getMaxId, getPreparedPosts } from './services/posts';
 import { PostForm } from './components/PostForm';
 import { PostList } from './components/PostList';
+
+import postsFromServer from './api/posts.json';
 // #endregion
 
+function getMaxId(posts: Post[]) {
+  return Math.max(
+    ...posts.map(post => post.id),
+  );
+}
+
 export const PostsPage: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>(getPreparedPosts());
+  const [posts, setPosts] = useState<Post[]>(postsFromServer);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const addPost = useCallback((post: Post) => {

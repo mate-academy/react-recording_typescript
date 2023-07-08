@@ -1,8 +1,8 @@
 // #region imports
-import classNames from 'classnames';
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import { Post } from '../types/Post';
-import { getAllUsers } from '../services/user';
+import usersFromServer from '../api/users.json'
 // #endregion
 
 type Props = {
@@ -83,7 +83,7 @@ export const PostForm: React.FC<Props> = ({
   };
   // #endregion
 
-  const users = getAllUsers();
+  const users = usersFromServer;
 
   return (
     <form

@@ -1,11 +1,13 @@
-import { User } from '../types/User';
-import usersFromServer from '../api/users.json';
+import { User } from '../types';
 
-export function getAllUsers(): User[] {
-  return usersFromServer;
-}
+export function getUsers(): Promise<User[]> {
+  return fetch('http://localhost:3000/api/users.json')
+    .then((response) => {
+      if (!response.ok) {
 
-export function getUserById(userId: number): User | null {
-  return usersFromServer.find(user => user.id === userId)
-    || null;
+      }
+
+      return response.json();
+    })
+    .then(users => users.slice(0, 3))
 }
