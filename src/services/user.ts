@@ -1,13 +1,7 @@
 import { User } from '../types';
+import { getData } from '../utils/httpClient';
 
-export function getUsers(): Promise<User[]> {
-  return fetch('http://localhost:3000/api/users.json')
-    .then((response) => {
-      if (!response.ok) {
-
-      }
-
-      return response.json();
-    })
+export function getUsers() {
+  return getData<User[]>('/users')
     .then(users => users.slice(0, 3))
 }
