@@ -21,6 +21,7 @@ export const PostList: React.FC<Props> = React.memo((({
         <tr className="has-background-link-light">
           <th>#</th>
           <th>Title</th>
+          <th>Body</th>
           <th></th>
           <th></th>
         </tr>
@@ -36,6 +37,7 @@ export const PostList: React.FC<Props> = React.memo((({
           >
             <td>{post.id}</td>
             <td>{post.title}</td>
+            <td>{post.body}</td>
             <td>
               <button
                 className="icon button is-inverted is-info"

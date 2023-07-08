@@ -1,26 +1,29 @@
-// #region imports
 import React, { useState } from 'react';
 import classNames from 'classnames';
+
 import { Post } from '../types/Post';
-import usersFromServer from '../api/users.json'
-// #endregion
+import { User } from '../types';
 
 type Props = {
   onSubmit: (post: Post) => void;
   onReset?: () => void;
-  post?: Post;
+  post?: Post | null;
+  fixedUserId?: number;
+  users: User[];
 };
 
 export const PostForm: React.FC<Props> = ({ 
   onSubmit, 
   onReset = () => {},
   post,
+  fixedUserId = 0,
+  users=[],
 }) => {
   // #region state
   const [title, setTitle] = useState(post?.title || '');
   const [hasTitleError, setHasTitleError] = useState(false);
 
-  const [userId, setUserId] = useState(post?.userId || 0);
+  const [userId, setUserId] = useState(post?.userId || fixedUserId);
   const [hasUserIdError, setHasUserIdError] = useState(false);
   
   const [body, setBody] = useState(post?.body || '');
@@ -42,8 +45,8 @@ export const PostForm: React.FC<Props> = ({
     setBodyErrorMessage('');
   };
   // #endregion
-  // #region submit
   const handleSubmit = (event: React.FormEvent) => {
+    // #region validation
     event.preventDefault();
 
     setHasTitleError(!title);
@@ -58,21 +61,18 @@ export const PostForm: React.FC<Props> = ({
     if (!title || !userId || body.length < 5) {
       return;
     }
+    // #endregion
 
-    onSubmit({
-      id: post?.id || 0,
-      title,
-      body,
-      userId,
-    });
+    const id = post?.id || 0;
+
+    onSubmit({ id, title, body, userId });
 
     reset();
   };
-  // #endregion
   // #region reset
   const reset = () => {
     setTitle('');
-    setUserId(0);
+    setUserId(fixedUserId);
     setBody('');
 
     setHasTitleError(false);
@@ -82,8 +82,6 @@ export const PostForm: React.FC<Props> = ({
     onReset();
   };
   // #endregion
-
-  const users = usersFromServer;
 
   return (
     <form
@@ -140,6 +138,7 @@ export const PostForm: React.FC<Props> = ({
               id="post-user-id"
               value={userId}
               onChange={handleUserIdChange}
+              disabled={fixedUserId !== 0}
             >
               <option value="0">Select a user</option>
 
