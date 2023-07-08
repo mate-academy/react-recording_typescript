@@ -16,12 +16,11 @@ export const PostList: React.FC<Props> = React.memo((({
   onSelect = () => {},
 }) => {
   return (
-    <table className="table is-striped is-narrow box">
+    <table className="table is-striped is-narrow">
       <thead>
         <tr className="has-background-link-light">
           <th>#</th>
           <th>Title</th>
-          <th>User</th>
           <th></th>
           <th></th>
         </tr>
@@ -36,8 +35,7 @@ export const PostList: React.FC<Props> = React.memo((({
             })}
           >
             <td>{post.id}</td>
-            <td >{post.title}</td>
-            <td>{post.user?.username}</td>
+            <td>{post.title}</td>
             <td>
               <button
                 className="icon button is-inverted is-info"

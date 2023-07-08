@@ -1,8 +1,8 @@
 // #region imports
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Post } from '../types/Post';
-import { getAllUsers, getUserById } from '../services/user';
+import { getAllUsers } from '../services/user';
 // #endregion
 
 type Props = {
@@ -13,19 +13,9 @@ type Props = {
 
 export const PostForm: React.FC<Props> = ({ 
   onSubmit, 
-  post, 
   onReset = () => {},
+  post,
 }) => {
-  const titleField = useRef<HTMLInputElement>(null);
-
-  console.log(titleField.current);
-
-  useEffect(() => {
-    if (titleField.current && post) {
-      titleField.current.focus();
-    }
-  }, [post?.id]);
-  
   // #region state
   const [title, setTitle] = useState(post?.title || '');
   const [hasTitleError, setHasTitleError] = useState(false);
@@ -74,7 +64,6 @@ export const PostForm: React.FC<Props> = ({
       title,
       body,
       userId,
-      user: getUserById(userId),
     });
 
     reset();
@@ -94,15 +83,18 @@ export const PostForm: React.FC<Props> = ({
   };
   // #endregion
 
+  const users = getAllUsers();
+
   return (
     <form
       action="/api/posts" 
-      method="POST" 
-      className="box"
+      method="POST"
       onSubmit={handleSubmit}
       onReset={reset}
     >
-      <h2 className="title is-4">Create a post</h2>
+      <h2 className="title is-5">
+        {post ? 'Edit a post' : 'Create a post'}
+      </h2>
 
       <div className="field">
         <label className="label" htmlFor="post-title">
@@ -114,7 +106,6 @@ export const PostForm: React.FC<Props> = ({
         })}>
           <input
             id="post-title"
-            ref={titleField}
             className={classNames('input', {
               'is-danger': hasTitleError
             })} 
@@ -122,9 +113,6 @@ export const PostForm: React.FC<Props> = ({
             placeholder="Enter title" 
             value={title}
             onChange={handleTitleChange}
-            onBlur={() => {
-              setHasTitleError(!title);
-            }}
           />
 
           {hasTitleError && (
@@ -155,7 +143,7 @@ export const PostForm: React.FC<Props> = ({
             >
               <option value="0">Select a user</option>
 
-              {getAllUsers().map(user => (
+              {users.map(user => (
                 <option value={user.id} key={user.id}>
                   {user.name}
                 </option>
@@ -196,7 +184,7 @@ export const PostForm: React.FC<Props> = ({
 
       <div className="buttons">
         <button type="submit" className="button is-link">
-          Submit
+          {post ? 'Save' : 'Create'}
         </button>
 
         <button type="reset" className="button is-link is-light">
