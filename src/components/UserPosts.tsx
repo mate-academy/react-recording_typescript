@@ -1,3 +1,4 @@
+// #region imports
 import React, { useEffect, useState } from 'react';
 
 import { User, Post } from '../types';
@@ -10,9 +11,11 @@ import { Loader } from './Loader';
 type Props = {
   userId: number;
 };
+// #endregion
 
 export const UserPosts: React.FC<Props> = ({ userId }) => {
   // #region loadPosts
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
@@ -34,22 +37,34 @@ export const UserPosts: React.FC<Props> = ({ userId }) => {
   }
   // #endregion
   // #region add, delete, update
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  
   function addPost({ title, body, userId }: Post) {
-    postService.createPost({ title, body, userId })
+    setErrorMessage('');
+
+    return postService.createPost({ title, body, userId })
       .then(newPost => {
         setPosts(currentPosts => [...currentPosts, newPost]);
       })
+      .catch((error) => {
+        setErrorMessage(`Can't create a post`);
+        throw error;
+      });
   }
 
   function deletePost(postId: number) {
-    postService.deletePost(postId);
     setPosts(currentPosts => currentPosts.filter(post => post.id !== postId));
+
+    return postService.deletePost(postId)
+      .catch((error) => {
+        setPosts(posts);
+        setErrorMessage(`Can't delete a post`);
+        throw error;
+      });
   }
 
   function updatePost(updatedPost: Post) {
-    postService.updatePost(updatedPost)
+    setErrorMessage('');
+
+    return postService.updatePost(updatedPost)
       .then(post => {
         setPosts(currentPosts => {
           const newPosts = [...currentPosts];
@@ -60,42 +75,51 @@ export const UserPosts: React.FC<Props> = ({ userId }) => {
           return newPosts;
         });
       })
+      .catch((error) => {
+        setErrorMessage(`Can't update a post`);
+        throw error;
+      });
   }
   // #endregion
+
+  if (loading) {
+    return (
+      <div className="box">
+        <h2 className="title is-4">User {userId} posts</h2>
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="box">
       <h2 className="title is-4">User {userId} posts</h2>
 
-      {!loading && !errorMessage && <>
-        {posts.length > 0 ? (
-          <PostList
-            posts={posts}
-            selectedPostId={selectedPost?.id}
-            onSelect={setSelectedPost}
-            onDelete={deletePost}
-          />
-        ) : (
-          <p>There are no posts yet</p>
-        )}
-
-        <hr />
-
-        <PostForm
-          key={selectedPost?.id}
-          post={selectedPost}
-          fixedUserId={userId}
-          users={users}
-          onSubmit={selectedPost ? updatePost : addPost}
-          onReset={() => setSelectedPost(null)}
+      {posts.length > 0 ? (
+        <PostList
+          posts={posts}
+          selectedPostId={selectedPost?.id}
+          onSelect={setSelectedPost}
+          onDelete={deletePost}
         />
-      </>}
-
-      {loading && <Loader />}
+      ) : (
+        <p>There are no posts yet</p>
+      )}
 
       {errorMessage && (
         <p className="notification is-danger">{errorMessage}</p>
       )}
-    </div >
+
+      <hr />
+
+      <PostForm
+        key={selectedPost?.id}
+        post={selectedPost}
+        fixedUserId={userId}
+        users={users}
+        onSubmit={selectedPost ? updatePost : addPost}
+        onReset={() => setSelectedPost(null)}
+      />
+    </div>
   );
 };
