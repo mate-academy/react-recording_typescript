@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { User, Post } from '../types';
-import { getUserPosts } from '../services/post';
+import * as postService from '../services/post';
 import { getUsers } from '../services/user';
 import { PostForm } from './PostForm';
 import { PostList } from './PostList';
@@ -27,7 +27,7 @@ export const UserPosts: React.FC<Props> = ({ userId }) => {
   function loadPosts() {
     setLoading(true);
 
-    getUserPosts(userId)
+    postService.getUserPosts(userId)
       .then(setPosts)
       .catch(() => setErrorMessage('Try again later'))
       .finally(() => setLoading(false));
@@ -46,6 +46,7 @@ export const UserPosts: React.FC<Props> = ({ userId }) => {
   }
 
   function deletePost(postId: number) {
+    postService.deletePost(postId);
     setPosts(currentPosts => currentPosts.filter(post => post.id !== postId));
   }
 
