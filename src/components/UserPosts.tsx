@@ -36,13 +36,11 @@ export const UserPosts: React.FC<Props> = ({ userId }) => {
   // #region add, delete, update
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   
-  function addPost(post: Post) {
-    setPosts(currentPosts => {
-      const maxId = Math.max(0, ...currentPosts.map(post => post.id));
-      const id = maxId + 1;
-
-      return [...currentPosts, { ...post, id }];
-    });
+  function addPost({ title, body, userId }: Post) {
+    postService.createPost({ title, body, userId })
+      .then(newPost => {
+        setPosts(currentPosts => [...currentPosts, newPost]);
+      })
   }
 
   function deletePost(postId: number) {
