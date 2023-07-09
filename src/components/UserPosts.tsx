@@ -49,14 +49,17 @@ export const UserPosts: React.FC<Props> = ({ userId }) => {
   }
 
   function updatePost(updatedPost: Post) {
-    setPosts(currentPosts => {
-      const newPosts = [...currentPosts];
-      const index = newPosts.findIndex(post => post.id === updatedPost.id);
-
-      newPosts.splice(index, 1, updatedPost);
-
-      return newPosts;
-    });
+    postService.updatePost(updatedPost)
+      .then(post => {
+        setPosts(currentPosts => {
+          const newPosts = [...currentPosts];
+          const index = newPosts.findIndex(post => post.id === updatedPost.id);
+    
+          newPosts.splice(index, 1, post);
+    
+          return newPosts;
+        });
+      })
   }
   // #endregion
 
