@@ -75,9 +75,9 @@ export const PostForm: React.FC<Props> = ({
   };
   // #region reset
   const reset = () => {
-    setTitle('');
-    setUserId(fixedUserId);
-    setBody('');
+    setTitle(post?.title || '');
+    setUserId(post?.userId || fixedUserId);
+    setBody(post?.body || '');
 
     setHasTitleError(false);
     setHasUserIdError(false);
@@ -94,10 +94,6 @@ export const PostForm: React.FC<Props> = ({
       onSubmit={handleSubmit}
       onReset={reset}
     >
-      <h2 className="title is-5">
-        {post ? 'Edit a post' : 'Create a post'}
-      </h2>
-
       <div className="field">
         <label className="label" htmlFor="post-title">
           Title
@@ -131,7 +127,7 @@ export const PostForm: React.FC<Props> = ({
 
       <div className="field">
         <label className="label" htmlFor="post-user-id">
-          Subject
+          Author
         </label>
 
         <div className="control has-icons-left">

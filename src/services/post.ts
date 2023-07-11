@@ -2,7 +2,17 @@ import { Post } from '../types';
 import { client } from '../utils/httpClient';
 
 export function getUserPosts(userId: number) {
-  return client.get<Post[]>(`/posts?userId=${userId}`)
+  let url = '/posts';
+
+  if (userId) {
+    url += `?userId=${userId}`;
+  }
+
+  return client.get<Post[]>(url);
+}
+
+export function getPost(postId: number) {
+  return client.get<Post>(`/posts/${postId}`)
 }
 
 export function deletePost(postId: number) {
