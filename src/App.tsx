@@ -1,4 +1,10 @@
-import { Link, Outlet } from 'react-router-dom';
+import classNames from 'classnames';
+import { Link, Outlet, NavLink } from 'react-router-dom';
+
+const getLinkClass = ({ isActive }: { isActive: boolean }) => classNames('navbar-item', {
+  'is-active': isActive,
+});
+const getLinkStyle = ({ isActive }: { isActive: boolean }) => ({ color: isActive ? 'red' : ''});
 
 export const App = () => {
   return <>
@@ -8,17 +14,17 @@ export const App = () => {
           <img src="/logo.svg" alt="MA" className="logo" />
         </Link>
 
-        <Link to="/" className="navbar-item is-active">
+        <NavLink to="/" className={getLinkClass} style={getLinkStyle}>
           Home
-        </Link>
+        </NavLink>
 
-        <Link to="/users" className="navbar-item">
+        <NavLink to="/users" className={getLinkClass} style={getLinkStyle}>
           Users
-        </Link>
+        </NavLink>
 
-        <Link to="/posts" className="navbar-item">
+        <NavLink to="/posts" className={getLinkClass} style={getLinkStyle}>
           Posts
-        </Link>
+        </NavLink>
       </div>
     </nav>
 
