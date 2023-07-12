@@ -1,12 +1,6 @@
-import { Routes, Route, Link } from 'react-router-dom';
-import React from 'react';
-import { NewPostPage } from './pages/NewPostPage';
-import { PostDetailsPage } from './pages/PostDetailsPage';
-import { PostsPage } from './pages/PostsPage';
-import { UsersPage } from './pages/UsersPage';
-import { HomePage } from './pages/HomePage';
+import { Link, Outlet } from 'react-router-dom';
 
-export const App: React.FC = () => {
+export const App = () => {
   return <>
     <nav className="navbar is-light px-3">
       <div className="navbar-brand">
@@ -29,13 +23,7 @@ export const App: React.FC = () => {
     </nav>
 
     <div className="section">
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/users" element={<UsersPage />} />
-        <Route path="/posts" element={<PostsPage />} />
-        <Route path="/posts/620" element={<PostDetailsPage />} />
-        <Route path="/posts/new" element={<NewPostPage />} />
-      </Routes>
+      <Outlet />
     </div>
   </>;
 }
