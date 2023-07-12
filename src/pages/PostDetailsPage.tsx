@@ -1,3 +1,4 @@
+import {} from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { Post } from '../types';
 import { getPost } from '../services/post';

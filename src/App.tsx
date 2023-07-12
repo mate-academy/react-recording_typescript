@@ -1,10 +1,17 @@
 import classNames from 'classnames';
 import { Link, Outlet, NavLink } from 'react-router-dom';
 
-const getLinkClass = ({ isActive }: { isActive: boolean }) => classNames('navbar-item', {
+interface Options {
+  isActive: boolean
+}
+
+const getLinkClass = ({ isActive }: Options) => classNames('navbar-item', {
   'is-active': isActive,
 });
-const getLinkStyle = ({ isActive }: { isActive: boolean }) => ({ color: isActive ? 'red' : ''});
+
+const getLinkStyle = ({ isActive }: Options) => ({
+  color: isActive ? 'red' : '',
+});
 
 export const App = () => {
   return <>

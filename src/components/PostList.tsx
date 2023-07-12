@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
 import { Post } from '../types/Post';
 import classNames from 'classnames';
@@ -38,14 +39,16 @@ export const PostList: React.FC<Props> = React.memo((({
             <td>{post.id}</td>
             <td>{post.title}</td>
             <td>{post.body}</td>
+
             <td>
-              <button
+              <Link
+                to=""
                 className="icon button is-inverted is-info"
-                onClick={() => onSelect(post)}
               >
                 <i className="fas fa-pen"></i>
-              </button>
+              </Link>
             </td>
+            
             <td>
               <button
                 className="icon button is-inverted is-danger"

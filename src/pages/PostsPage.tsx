@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Link } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
 
 import { PostList } from '../components/PostList';
 import { Loader } from '../components/Loader';
@@ -28,7 +28,9 @@ export const PostsPage: React.FC = () => {
         <p>There are no posts yet</p>
       )}
 
-      <a href="#/posts/new" className="button is-info">Create a post</a>
+      <Link to="/posts/new" className="button is-info">
+        Create a post
+      </Link>
 
       {errorMessage && (
         <p className="notification is-danger">{errorMessage}</p>
