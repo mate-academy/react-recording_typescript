@@ -19,7 +19,13 @@ export const Root = () => (
             <Route index element={<HomePage />} />
 
             <Route path="users">
-              <Route path=":userId?" element={<UsersPage />} />
+              <Route index element={<UsersPage />} />
+
+              <Route path=":userId?/posts">
+                <Route index element={<PostsPage />} />
+                <Route path=":postId" element={<PostDetailsPage />} />
+                <Route path="new" element={<NewPostPage />} />
+              </Route>
             </Route>
 
             <Route path="posts">

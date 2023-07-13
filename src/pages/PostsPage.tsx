@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Link } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import React, { useContext, useEffect, useId } from 'react';
 
 import { PostList } from '../components/PostList';
 import { Loader } from '../components/Loader';
@@ -8,11 +8,12 @@ import { PostsContext } from '../store/PostsContext';
 
 export const PostsPage: React.FC = () => {
   const { posts, loading, errorMessage, loadPosts } = useContext(PostsContext);
-  const userId = 11;
+  const { userId } = useParams();
+  const selectedUserId = userId ? +userId : 0;
 
   useEffect(() => {
-    loadPosts(userId);
-  }, [userId]);
+    loadPosts(selectedUserId);
+  }, [selectedUserId]);
 
   if (loading) {
     return <Loader />
@@ -20,7 +21,11 @@ export const PostsPage: React.FC = () => {
 
   return (
     <div className="">
-      <h1 className="title">User {userId} Posts</h1>
+      {selectedUserId !== 0 && (
+        <Link to="..">Back</Link>
+      )}
+
+      <h1 className="title">Posts</h1>
 
       {posts.length > 0 ? (
         <PostList posts={posts} />
