@@ -17,13 +17,14 @@ export const Root = () => (
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<HomePage />} />
+
             <Route path="users">
               <Route path=":userId?" element={<UsersPage />} />
             </Route>
 
             <Route path="posts">
               <Route index element={<PostsPage />} />
-              <Route path="620" element={<PostDetailsPage />} />
+              <Route path=":postId" element={<PostDetailsPage />} />
               <Route path="new" element={<NewPostPage />} />
             </Route>
 

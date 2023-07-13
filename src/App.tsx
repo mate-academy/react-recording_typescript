@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { Link, Outlet, NavLink } from 'react-router-dom';
 
+// #region isActive
 interface Options {
   isActive: boolean
 }
@@ -12,6 +13,7 @@ const getLinkClass = ({ isActive }: Options) => classNames('navbar-item', {
 const getLinkStyle = ({ isActive }: Options) => ({
   color: isActive ? 'red' : '',
 });
+// #endregion
 
 export const App = () => {
   return <>

@@ -28,7 +28,7 @@ export const PostsPage: React.FC = () => {
         <p>There are no posts yet</p>
       )}
 
-      <Link to="/posts/new" className="button is-info">
+      <Link to="new" className="button is-info">
         Create a post
       </Link>
 

@@ -1,4 +1,4 @@
-import {} from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { Post } from '../types';
 import { getPost } from '../services/post';
@@ -15,20 +15,32 @@ export const PostDetailsPage = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const postId = 620;
+  const { postId } = useParams();
+  const normalizedPostId = postId ? +postId : 0;
+  const navigate = useNavigate()
 
   useEffect(() => {
     setErrorMessage('');
     setLoading(true);
 
-    getPost(postId)
+    getPost(normalizedPostId)
       .then(setPost)
-      .catch(() => setErrorMessage(`Can't load a post`))
+      .catch(() => {
+        setErrorMessage(`Can't load a post`);
+
+        setTimeout(() => {
+          navigate('..');
+        }, 2000);
+      })
       .finally(() => setLoading(false));
-  }, [postId]);
+  }, [normalizedPostId]);
+
+  if (!normalizedPostId || !Number.isInteger(normalizedPostId)) {
+    return <Navigate to=".." />;
+  }
 
   return <>
-    <h1 className="title">Edit post {postId}</h1>
+    <h1 className="title">Edit post {normalizedPostId}</h1>
 
     {loading && <Loader />}
 
@@ -41,7 +53,11 @@ export const PostDetailsPage = () => {
         users={users}
         fixedUserId={11}
         post={post}
-        onSubmit={updatePost}
+        onReset={() => navigate('..')}
+        onSubmit={(updatedPost) => {
+          return updatePost(updatedPost)
+            .then(() => navigate('..'));
+        }}
       />
     )}
   </>;
