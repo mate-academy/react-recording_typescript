@@ -1,26 +1,27 @@
 // #region imports 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import { Post } from './types/Post';
 import { getMaxId, getPreparedPosts } from './services/posts';
 import { PostForm } from './components/PostForm';
 import { PostList } from './components/PostList';
+import debounce from 'lodash.debounce';
 // #endregion
 
 export const App: React.FC = () => {
-  // #region query
   const [query, setQuery] = useState('');
+  const [appliedQuery, setAppliedQuery] = useState('');
+
+  const timerId = useRef(0);
+
+  const applyQuery = useCallback(debounce(setAppliedQuery, 1000), []);
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
-  };
-  // #endregion
-  // #region posts
-  const [posts, setPosts] = useState<Post[]>(getPreparedPosts());
+    applyQuery(event.target.value);
+  }
 
-  const filteredPosts = useMemo(() => {
-    return posts.filter(post => post.title.includes(query));
-  }, [query, posts]);
+  const [posts, setPosts] = useState<Post[]>(getPreparedPosts());
 
   const addPost = useCallback((post: Post) => {
     setPosts(currentPosts => {
@@ -34,21 +35,28 @@ export const App: React.FC = () => {
   }, []);
 
   const deletePost = useCallback((postId: number) => {
-    setPosts(currentPosts => currentPosts.filter(post => post.id !== postId));
+    setPosts(currentPosts => currentPosts.filter(post => post.id !== postId))
   }, []);
+
+  const filteredPosts = useMemo(() => {
+    return posts.filter(post => post.title.includes(appliedQuery))
+  }, [appliedQuery, posts]);
+
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
 
   const updatePost = useCallback((updatedPost: Post) => {
-    setPosts(currentPosts => {
-      const newPosts = [...currentPosts];
-      const index = newPosts.findIndex(post => post.id === updatedPost.id);
+      setPosts(currentPost => {
+        const newPosts = [...currentPost];
+        const index = currentPost.findIndex(post => post.id === updatedPost.id);
 
-      newPosts.splice(index, 1, updatedPost);
 
-      return newPosts;
-    });
-  }, []);
-  // #endregion
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+        newPosts.splice(index, 1, updatedPost);
+
+        return newPosts
+      })
+    },[],
+  );
+
 
   return (
     <div className="section py-5">
@@ -76,15 +84,16 @@ export const App: React.FC = () => {
       />
 
       {selectedPost ? (
-        <PostForm
-          key={selectedPost.id}
-          post={selectedPost}
-          onSubmit={updatePost}
-          onReset={() => setSelectedPost(null)}
-        />
-      ) : (
-        <PostForm onSubmit={addPost} />
-      )}
+          <PostForm
+            onSubmit={updatePost}
+            post={selectedPost}
+            key={selectedPost.id}
+            onReset={() => setSelectedPost(null)}
+          />
+        ) : (
+          <PostForm onSubmit={addPost} />
+        )
+      }
     </div>
   );
 };
