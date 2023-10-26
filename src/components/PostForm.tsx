@@ -1,38 +1,36 @@
 // #region imports
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { Post } from '../types/Post';
 import { getAllUsers, getUserById } from '../services/user';
-// #endregion
 
 type Props = {
   onSubmit: (post: Post) => void;
   onReset?: () => void;
-  post?: Post;
+  post?: Post
 };
+// #endregion
 
-export const PostForm: React.FC<Props> = ({ 
-  onSubmit, 
-  post, 
-  onReset = () => {},
+export const PostForm: React.FC<Props> = ({
+  onSubmit,
+  post,
+  onReset = () => {}
 }) => {
   const titleField = useRef<HTMLInputElement>(null);
 
-  console.log(titleField.current);
-
   useEffect(() => {
-    if (titleField.current && post) {
+    if(titleField.current && post) {
       titleField.current.focus();
     }
   }, [post?.id]);
-  
+
   // #region state
   const [title, setTitle] = useState(post?.title || '');
   const [hasTitleError, setHasTitleError] = useState(false);
 
   const [userId, setUserId] = useState(post?.userId || 0);
   const [hasUserIdError, setHasUserIdError] = useState(false);
-  
+
   const [body, setBody] = useState(post?.body || '');
   const [bodyErrorMessage, setBodyErrorMessage] = useState('');
   // #endregion
@@ -96,8 +94,8 @@ export const PostForm: React.FC<Props> = ({
 
   return (
     <form
-      action="/api/posts" 
-      method="POST" 
+      action="/api/posts"
+      method="POST"
       className="box"
       onSubmit={handleSubmit}
       onReset={reset}
@@ -114,12 +112,12 @@ export const PostForm: React.FC<Props> = ({
         })}>
           <input
             id="post-title"
-            ref={titleField}
             className={classNames('input', {
               'is-danger': hasTitleError
-            })} 
-            type="text" 
-            placeholder="Enter title" 
+            })}
+            ref={titleField}
+            type="text"
+            placeholder="Email input"
             value={title}
             onChange={handleTitleChange}
             onBlur={() => {
@@ -179,11 +177,11 @@ export const PostForm: React.FC<Props> = ({
         </label>
 
         <div className="control">
-          <textarea 
+          <textarea
             className={classNames('textarea', {
               'is-danger': bodyErrorMessage,
-            })} 
-            placeholder="At least 5 characters"
+            })}
+            placeholder="Add some text here"
             value={body}
             onChange={handleBodyChange}
           ></textarea>
